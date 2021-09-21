@@ -10,7 +10,7 @@ import {
 import "./App.css";
 
 function App() {
-  const firebaseApp = initializeApp({
+  initializeApp({
     apiKey: "AIzaSyBVBFjUVdl3t2iAYmmzKFOZ-AM84CyntrQ",
     authDomain: "tic-tac-toe-4way.firebaseapp.com",
     projectId: "tic-tac-toe-4way",
@@ -39,16 +39,16 @@ function App() {
   let db = getFirestore();
   let nextPlayer = { X: "O", O: "X" };
 
-  useEffect(() => {
-    let db = getFirestore();
-    async function initialUpdate() {
-      let updateData = await getDoc(doc(db, "boardData", "gameData"));
-      updateData = updateData.data();
-      setCurrentPlayer(updateData.player);
-      setGameState(updateData.gameStatus);
-    }
-    initialUpdate();
-  }, []);
+  // useEffect(() => {
+  //   let db = getFirestore();
+  //   async function initialUpdate() {
+  //     let updateData = await getDoc(doc(db, "boardData", "gameData"));
+  //     updateData = updateData.data();
+  //     setCurrentPlayer(updateData.player);
+  //     setGameState(updateData.gameStatus);
+  //   }
+  //   initialUpdate();
+  // }, []);
 
   useEffect(() => {
     let db = getFirestore();
@@ -66,7 +66,7 @@ function App() {
       x = x.data();
       setCurrentPlayer(x.player);
       setGameState(x.gameStatus);
-    }, 4000);
+    }, 10000);
   });
 
   async function setData(dummy, i, j) {
