@@ -3,10 +3,8 @@ function checkVertical(player, board) {
   for (let i = 0; i < board.length; i++) {
     winCount = 0;
     for (let j = 0; j < board.length; j++) {
-      if (board[j][i] === player) {
-        winCount++;
-      }
-      if (winCount === 4) {
+      winCount = board[j][i] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
         return true;
       }
     }
@@ -19,10 +17,8 @@ function checkHorizontal(player, board) {
   for (let i = 0; i < board.length; i++) {
     winCount = 0;
     for (let j = 0; j < board.length; j++) {
-      if (board[i][j] === player) {
-        winCount++;
-      }
-      if (winCount === 4) {
+      winCount = board[i][j] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
         return true;
       }
     }
@@ -40,10 +36,8 @@ function checkPrimaryDiagonals(player, board) {
     winCount = 0;
     for (let j = 0; j <= k; j++) {
       let i = k - j;
-      if (board[i][j] === player) {
-        winCount++;
-      }
-      if (winCount === 4) {
+      winCount = board[i][j] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
         return true;
       }
     }
@@ -54,10 +48,8 @@ function checkPrimaryDiagonals(player, board) {
     winCount = 0;
     for (let j = 0; j <= k; j++) {
       let i = k - j;
-      if (board[i][j] === player) {
-        winCount++;
-      }
-      if (winCount === 4) {
+      winCount = board[i][j] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
         return true;
       }
     }

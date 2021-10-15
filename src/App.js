@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
 import {
   checkVertical,
   checkHorizontal,
@@ -39,35 +39,22 @@ function App() {
   let db = getFirestore();
   let nextPlayer = { X: "O", O: "X" };
 
-  // useEffect(() => {
-  //   let db = getFirestore();
-  //   async function initialUpdate() {
-  //     let updateData = await getDoc(doc(db, "boardData", "gameData"));
-  //     updateData = updateData.data();
-  //     setCurrentPlayer(updateData.player);
-  //     setGameState(updateData.gameStatus);
-  //   }
-  //   initialUpdate();
-  // }, []);
-
   useEffect(() => {
     let db = getFirestore();
-    setTimeout(async function () {
-      let x = await getData();
-      x = x.data();
-      let newBoard = new Array(board.length)
-        .fill()
-        .map(() => new Array(board.length).fill(""));
+    onSnapshot(doc(db, "boardData", "board"), (doc) => {
+      let x = doc.data();
+      let newBoard = new Array(10).fill().map(() => new Array(10).fill(""));
       for (let i in x) {
         newBoard[i[0]][i[1]] = x[i];
       }
       setBoard(newBoard);
-      x = await getDoc(doc(db, "boardData", "gameData"));
-      x = x.data();
+    });
+    onSnapshot(doc(db, "boardData", "gameData"), (doc) => {
+      let x = doc.data();
       setCurrentPlayer(x.player);
       setGameState(x.gameStatus);
-    }, 10000);
-  });
+    });
+  }, []);
 
   async function setData(dummy, i, j) {
     let x = await getData();
