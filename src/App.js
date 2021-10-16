@@ -9,6 +9,9 @@ import {
 } from "./winLogic";
 import "./App.css";
 
+let played = false;
+let currBoard = {};
+
 function App() {
   initializeApp({
     apiKey: "AIzaSyBVBFjUVdl3t2iAYmmzKFOZ-AM84CyntrQ",
@@ -37,6 +40,7 @@ function App() {
   let [currentPlayer, setCurrentPlayer] = useState("");
 
   let db = getFirestore();
+
   let nextPlayer = { X: "O", O: "X" };
 
   useEffect(() => {
@@ -44,15 +48,35 @@ function App() {
     onSnapshot(doc(db, "boardData", "board"), (doc) => {
       let x = doc.data();
       let newBoard = new Array(10).fill().map(() => new Array(10).fill(""));
+
+      let changed = false;
+      console.log(currBoard, x);
       for (let i in x) {
         newBoard[i[0]][i[1]] = x[i];
+        if (!(i in currBoard)) {
+          changed = true;
+
+          currBoard[i] = x[i];
+        }
+      }
+      if (changed) {
+        played = false;
       }
       setBoard(newBoard);
     });
-    onSnapshot(doc(db, "boardData", "gameData"), (doc) => {
-      let x = doc.data();
+    onSnapshot(doc(db, "boardData", "gameData"), async (thing) => {
+      let x = thing.data();
       setCurrentPlayer(x.player);
       setGameState(x.gameStatus);
+      if (x.isReset) {
+        await setDoc(doc(db, "boardData", "gameData"), {
+          player: "X",
+          gameStatus: "Tic-Tac-Toe",
+          isReset: false,
+        });
+
+        window.location.reload(false);
+      }
     });
   }, []);
 
@@ -91,7 +115,7 @@ function App() {
   }
 
   async function fill(i, j) {
-    if (gameState !== "Tic-Tac-Toe") {
+    if (gameState !== "Tic-Tac-Toe" || played) {
       return;
     }
     let newBoard = new Array(board.length)
@@ -105,6 +129,9 @@ function App() {
 
     newBoard[i][j] = currentPlayer;
     setBoard(newBoard);
+    currBoard[String(i) + String(j)] = currentPlayer;
+    console.log(currBoard);
+    played = true;
     if (checkForWin(currentPlayer, newBoard)) {
       setGameState("Player " + currentPlayer + " wins!");
       await setDoc(doc(db, "boardData", "gameData"), {
@@ -146,7 +173,9 @@ function App() {
     await setDoc(doc(db, "boardData", "gameData"), {
       player: "X",
       gameStatus: "Tic-Tac-Toe",
+      isReset: true,
     });
+
     return;
   }
 
