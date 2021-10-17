@@ -38,9 +38,10 @@ function App() {
 
   let [gameState, setGameState] = useState("");
   let [currentPlayer, setCurrentPlayer] = useState("");
+  let [xWins, setXWins] = useState(0);
+  let [oWins, setOWins] = useState(0);
 
   let db = getFirestore();
-
   let nextPlayer = { X: "O", O: "X" };
 
   useEffect(() => {
@@ -68,11 +69,15 @@ function App() {
       let x = thing.data();
       setCurrentPlayer(x.player);
       setGameState(x.gameStatus);
+      setXWins(x.xWins);
+      setOWins(x.oWins);
       if (x.isReset) {
         await setDoc(doc(db, "boardData", "gameData"), {
           player: "X",
           gameStatus: "Tic-Tac-Toe",
           isReset: false,
+          xWins: x.xWins,
+          oWins: x.oWins,
         });
 
         window.location.reload(false);
@@ -134,10 +139,22 @@ function App() {
     played = true;
     if (checkForWin(currentPlayer, newBoard)) {
       setGameState("Player " + currentPlayer + " wins!");
-      await setDoc(doc(db, "boardData", "gameData"), {
-        player: nextPlayer[currentPlayer],
-        gameStatus: "Player " + currentPlayer + " wins!",
-      });
+      if (currentPlayer === "X") {
+        await setDoc(doc(db, "boardData", "gameData"), {
+          player: nextPlayer[currentPlayer],
+          gameStatus: "Player " + currentPlayer + " wins!",
+          xWins: xWins + 1,
+          oWins: oWins,
+        });
+      } else {
+        await setDoc(doc(db, "boardData", "gameData"), {
+          player: nextPlayer[currentPlayer],
+          gameStatus: "Player " + currentPlayer + " wins!",
+          xWins: xWins,
+          oWins: oWins + 1,
+        });
+      }
+
       await setData(currentPlayer, i, j);
       return;
     }
@@ -145,6 +162,8 @@ function App() {
     await setDoc(doc(db, "boardData", "gameData"), {
       player: nextPlayer[currentPlayer],
       gameStatus: gameState,
+      xWins: xWins,
+      oWins: oWins,
     });
   }
 
@@ -174,6 +193,8 @@ function App() {
       player: "X",
       gameStatus: "Tic-Tac-Toe",
       isReset: true,
+      xWins: xWins,
+      oWins: oWins,
     });
 
     return;
@@ -184,6 +205,10 @@ function App() {
       <p>{gameState}</p>
       <p>
         <div>Current player: {currentPlayer}</div>
+        <div>
+          <div>X wins: {xWins}</div>
+          <div>O wins: {oWins}</div>
+        </div>
         <button
           onClick={() => {
             resetGame();

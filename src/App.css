@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: #342e28;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,13 +11,13 @@
 }
 
 .GameContainer {
-  margin-top: 0.25%;
+  margin-top: 0.2%;
 }
 
 .PlayBox {
   border-style: solid;
   border-width: 3px;
-  background-color: blueviolet;
+  background-color: rgb(72, 51, 92);
   border-color: black;
   width: 7vw;
   height: 7vh;
@@ -37,6 +37,6 @@
 }
 
 p {
-  margin-top: 0.5%;
+  margin-top: 0.25%;
   margin-bottom: 0.5%;
 }
