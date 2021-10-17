@@ -36,6 +36,16 @@
   align-items: center;
 }
 
+.Scorekeeper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Score {
+  margin-right: 1vw;
+  margin-left: 1vw;
+}
+
 p {
   margin-top: 0.25%;
   margin-bottom: 0.5%;
