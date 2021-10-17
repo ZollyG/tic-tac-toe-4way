@@ -205,9 +205,10 @@ function App() {
       <p>{gameState}</p>
       <p>
         <div>Current player: {currentPlayer}</div>
-        <div>
-          <div>X wins: {xWins}</div>
-          <div>O wins: {oWins}</div>
+        <div className="Scorekeeper">
+          <div className="Score">X wins: {xWins}</div>
+
+          <div className="Score">O wins: {oWins}</div>
         </div>
         <button
           onClick={() => {
