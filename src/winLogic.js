@@ -59,21 +59,31 @@ function checkPrimaryDiagonals(player, board) {
 }
 
 function checkSecondaryDiagonals(player, board) {
-  let dummyBoard = new Array(board.length)
-    .fill()
-    .map(() => new Array(board.length).fill(""));
+  let winCount = 0;
 
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board.length; j++) {
-      dummyBoard[i][j] = board[i][j];
+  for (let k = board.length - 1; k >= 0; k--) {
+    winCount = 0;
+    for (let j = board.length - 1; j >= k; j--) {
+      let i = j - k;
+      winCount = board[i][j] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
+        return true;
+      }
     }
   }
 
-  for (let thing of dummyBoard) {
-    thing = thing.reverse();
+  for (let k = 0; k < board.length - 1; k++) {
+    winCount = 0;
+    for (let j = board.length - 1; j >= k; j--) {
+      let i = j - k;
+      winCount = board[j][i] === player ? winCount + 1 : 0;
+      if (winCount === 5) {
+        return true;
+      }
+    }
   }
 
-  return checkPrimaryDiagonals(player, dummyBoard);
+  return false;
 }
 
 export { checkVertical, checkHorizontal, checkPrimaryDiagonals, checkSecondaryDiagonals };
